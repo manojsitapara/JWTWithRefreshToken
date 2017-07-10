@@ -31,6 +31,7 @@ namespace JsonWebTokensWebApi.Format
                 throw new ArgumentNullException(nameof(data));
             }
 
+
             //Audience key was provided in GrantResourceOwnerCredentials()
             string audienceId = data.Properties.Dictionary.ContainsKey(Constants.ClientId) ? data.Properties.Dictionary[Constants.ClientId] : null;
 
