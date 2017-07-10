@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Http;
 using JsonWebTokensWebApi.Format;
 using JsonWebTokensWebApi.Provider;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode;
 
 [assembly: OwinStartup(typeof(JsonWebTokensWebApi.Startup))]
 
@@ -33,9 +34,9 @@ namespace JsonWebTokensWebApi
 
         public void ConfigureOAuth(IAppBuilder app)
         {
-            var issuer = "http://jwtauthzsrv.azurewebsites.net";
-            var audience = "099153c2625149bc8ecb3e85e03f0022";
-            var secret = TextEncodings.Base64Url.Decode("IxrAjDoa2FqElO7IhrSrUJELhUckePEPVpaePlS_Xaw");
+            var issuer = WebConfigurationManager.AppSettings["issuer"];
+            var audience = WebConfigurationManager.AppSettings["audience"];
+            var secret = TextEncodings.Base64Url.Decode(WebConfigurationManager.AppSettings["SymmetricKey"]);
 
 
             OAuthAuthorizationServerOptions oAuthServerOptions = new OAuthAuthorizationServerOptions()

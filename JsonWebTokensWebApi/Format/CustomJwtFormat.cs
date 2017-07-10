@@ -33,13 +33,14 @@ namespace JsonWebTokensWebApi.Format
 
 
             //Audience key was provided in GrantResourceOwnerCredentials()
-            string audienceId = data.Properties.Dictionary.ContainsKey(Constants.ClientId) ? data.Properties.Dictionary[Constants.ClientId] : null;
+            string audienceId = WebConfigurationManager.AppSettings["audience"];
 
             if (string.IsNullOrWhiteSpace(audienceId))
                 throw new InvalidOperationException("AuthenticationTicket Properties does not include audience");
 
 
             string symmetricKeyAsBase64 = WebConfigurationManager.AppSettings["SymmetricKey"];
+            
 
             var keyByteArray = TextEncodings.Base64Url.Decode(symmetricKeyAsBase64);
 
@@ -62,8 +63,9 @@ namespace JsonWebTokensWebApi.Format
         {
             var handler = new JwtSecurityTokenHandler();
             SecurityToken securityToken = handler.ReadToken(protectedText);
-            var audienceId = ((JwtSecurityToken)securityToken).Claims.First(x => x.Type == Constants.ClientId).Value;
-            
+            var audienceId = WebConfigurationManager.AppSettings["audience"];
+
+
             string symmetricKeyAsBase64 = WebConfigurationManager.AppSettings["SymmetricKey"];
             var keyByteArray = TextEncodings.Base64Url.Decode(symmetricKeyAsBase64);
             var securityKey = new InMemorySymmetricSecurityKey(keyByteArray);

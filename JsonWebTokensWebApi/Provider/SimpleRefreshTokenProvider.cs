@@ -72,8 +72,6 @@ namespace JsonWebTokensWebApi.Provider
 
         public void Receive(AuthenticationTokenReceiveContext context)
         {
-            //var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
-            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
             var refreshToken = _hPayDomain.GetRefreshToken(context.Token);
 
             if (refreshToken == null)
@@ -82,7 +80,6 @@ namespace JsonWebTokensWebApi.Provider
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
                 context.Response.ReasonPhrase = "Please login again to gain application access.";
-                return;
             }
             else
             {
@@ -90,7 +87,7 @@ namespace JsonWebTokensWebApi.Provider
                 //Protected Ticket column which contains signed string which contains a serialized representation for the ticket for specific user
                 //In other words it contains all the claims and ticket properties for this user. 
                 context.DeserializeTicket(refreshToken.ProtectedTicket);
-                var result = _hPayDomain.DeleteRefreshTokenByRefreshTokenId(context.Token);
+                _hPayDomain.DeleteRefreshTokenByRefreshTokenId(context.Token);
 
             }
 
