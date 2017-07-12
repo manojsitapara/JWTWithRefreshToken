@@ -36,7 +36,8 @@ namespace JsonWebTokensWebApi
         {
             var issuer = WebConfigurationManager.AppSettings["issuer"];
             var audience = WebConfigurationManager.AppSettings["audience"];
-            var secret = TextEncodings.Base64Url.Decode(WebConfigurationManager.AppSettings["SymmetricKey"]);
+            var symmentricKey = WebConfigurationManager.AppSettings["SymmetricKey"];
+            var secret = TextEncodings.Base64Url.Decode(symmentricKey);
 
 
             OAuthAuthorizationServerOptions oAuthServerOptions = new OAuthAuthorizationServerOptions()
@@ -46,7 +47,7 @@ namespace JsonWebTokensWebApi
                 TokenEndpointPath = new PathString("/oauth2/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
                 Provider = new CustomOAuthProvider(),
-                AccessTokenFormat = new CustomJwtFormat(issuer),
+                AccessTokenFormat = new CustomJwtFormat(issuer, audience, symmentricKey),
                 RefreshTokenProvider = new SimpleRefreshTokenProvider(),
 
             };
